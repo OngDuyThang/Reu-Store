@@ -1,0 +1,133 @@
+.navbarContainer {
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    background-color: #fff;
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    top: 30px;
+
+    .containerChild {
+        flex: 1;
+        height: 100%;
+    }
+
+    .left {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        text-transform: uppercase;
+
+        .register,
+        .signin {
+            user-select: none;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+            font-size: 18px;
+        }
+
+        .register:hover {
+            background-color: #065E01;
+            color: #fff;
+        }
+
+        .signin:hover {
+            background-color: #065E01;
+            color: #fff;
+        }
+
+        .badge {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .icon {
+                font-size: 28px;
+                color: #065E01
+            }
+
+            span {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background-color: red;
+                color: #fff;
+                font-size: 12px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-left: -8px;
+                margin-top: -24px;
+                user-select: none;
+            }
+        }
+
+        .badge:hover {
+            cursor: pointer;
+        }
+    }
+
+    .center {
+        color: #065E01;
+        font-size: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+
+        h1 {
+            cursor: pointer;
+        }
+    }
+
+    .right {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+
+        .searchBar {
+            width: 70%;
+            height: 70%;
+            border: 2px solid #065E01;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            input {
+                width: 80%;
+                height: 60%;
+                border: none;
+                margin-left: 16px;
+            }
+
+            input:focus {
+                outline: none;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .icon {
+                width: 10%;
+                color: #065E01;
+            }
+
+            .icon:hover {
+                cursor: pointer;
+            }
+        }
+
+        .languages {
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            user-select: none;
+            font-size: 18px;
+        }
+    }
+}
