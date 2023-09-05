@@ -90,4 +90,4 @@ export const searchProduct = async (dispatch, search) => {
         dispatch(publicActionFailure())
     }
     return []
-}
+} 

@@ -33,4 +33,4 @@ app.use('/api/mail', mailRoute);
 
 app.listen(process.env.PORT || 5000, () => {
 
-})
+}) 
