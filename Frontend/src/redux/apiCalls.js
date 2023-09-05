@@ -5,6 +5,7 @@ import {
     editProfileStart, editProfileSuccess, editProfileFailure
 } from './userRedux'
 import { displayPopup } from 'src/redux/popupRedux';
+import { createOrderStart, createOrderSuccess, createOrderFailure } from 'src/redux/orderRedux';
 import { publicActionStart, publicActionSuccess, publicActionFailure } from 'src/redux/publicActionRedux'
 
 export const login = async (dispatch, inputUser) => {
@@ -90,4 +91,21 @@ export const searchProduct = async (dispatch, search) => {
         dispatch(publicActionFailure())
     }
     return []
-} 
+}
+
+export const checkout = async (dispatch, requestBody) => {
+    dispatch(createOrderStart())
+    try {
+        const res = await publicRequest.post('/api/stripe/payment', requestBody)
+        if (res.data.errCode === 0) {
+            dispatch(createOrderSuccess())
+            dispatch(displayPopup())
+        } else {
+            dispatch(createOrderFailure())
+            dispatch(displayPopup())
+        }
+    } catch (err) {
+        dispatch(createOrderFailure())
+        dispatch(displayPopup())
+    }
+}

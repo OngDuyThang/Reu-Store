@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import cartReducer from "../redux/cartRedux";
 import userReducer from "../redux/userRedux";
 import popupReducer from "../redux/popupRedux";
+import orderReducer from "../redux/orderRedux";
 import publicActionReducer from "../redux/publicActionRedux";
 
 import {
@@ -21,7 +22,13 @@ const persistConfig = { // default
     storage,
 }
 
-const rootReducer = combineReducers({ user: userReducer, cart: cartReducer, popup: popupReducer, publicAction: publicActionReducer })
+const rootReducer = combineReducers({
+    user: userReducer,
+    cart: cartReducer,
+    popup: popupReducer,
+    order: orderReducer,
+    publicAction: publicActionReducer
+})
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export default configureStore({

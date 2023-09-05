@@ -8,6 +8,10 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { changeQuantity, removeProduct } from '../../redux/cartRedux';
+import StripeCheckout from 'react-stripe-checkout';
+import { checkout } from 'src/redux/apiCalls';
+import Delay from 'src/components/delay/Delay';
+import Popup from 'src/components/popup/Popup';
 
 export default function Cart() {
     const shipping = 5, discount = 3
@@ -19,13 +23,27 @@ export default function Cart() {
 
     const dispatch = useDispatch();
     const { products, total, cartQuantity } = useSelector(state => state.cart)
-
     function setProductQuantity(index, unit) {
         dispatch(changeQuantity({ index, unit }))
     }
 
+    const { isSession } = useSelector(state => state.user)
+    const { isFetching, error } = useSelector(state => state.order)
+    const { showPopup } = useSelector(state => state.popup)
+    async function onToken(resToken) {
+        await checkout(dispatch, { tokenId: resToken.id, amount: total })
+    }
+
+    function preventCheckout(e) {
+        if (!isSession) {
+            e.preventDefault()
+            alert('You must sign in before checkout!')
+        }
+    }
+
     return (
         <div style={{ overflow: 'hidden' }}>
+            <Delay showDelay={isFetching} />
             <Announcement />
             <Navbar />
             <div className="cartContainer">
@@ -38,7 +56,7 @@ export default function Cart() {
                         <span>Shopping Bag ({cartQuantity})</span>
                         <span>Your Wishlist (0)</span>
                     </div>
-                    <div className="button">checkout now</div>
+                    <div className="button"><a href='#checkout'>checkout now</a></div>
                 </div>
 
                 <div className="cart">
@@ -69,7 +87,7 @@ export default function Cart() {
                         })}
                     </div>
 
-                    <div className="right">
+                    <div className="right" id='checkout'>
                         <h1>order summary</h1>
                         <div className='row'>
                             <span>Subtotal</span>
@@ -87,12 +105,26 @@ export default function Cart() {
                             <span>Total</span>
                             <span>$ {total + shipping - discount}</span>
                         </div>
-                        <div className='button'>checkout now</div>
+                        <StripeCheckout
+                            name='Rêu Store'
+                            billingAddress
+                            shippingAddress
+                            description={`Your total is $${total}`}
+                            amount={total}
+                            token={onToken}
+                            stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}
+                        >
+                            <div className='button' onClick={(e) => preventCheckout(e)}>checkout now</div>
+                        </StripeCheckout>
                     </div>
                 </div>
             </div>
             <Newsletter />
             <Footer />
+            <Popup isShow={showPopup === 1 ? true : false}
+                isSuccess={error === false ? true : false}
+                successMess='Your order has been recorded!'
+                failMess='Something went wrong! Please order again' />
         </div>
     )
-} 
+}
