@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    isFetching: false,
-    error: false
+    isPublicFetching: false,
+    publicError: false,
+    isSearching: false
 }
 
 const publicActionSlice = createSlice({
@@ -10,18 +11,25 @@ const publicActionSlice = createSlice({
     initialState,
     reducers: {
         publicActionStart(state) {
-            state.isFetching = true;
+            state.isPublicFetching = true;
         },
         publicActionSuccess(state) {
-            state.isFetching = false;
-            state.error = false;
+            state.isPublicFetching = false;
+            state.publicError = false;
         },
         publicActionFailure(state) {
-            state.isFetching = false;
-            state.error = true;
+            state.isPublicFetching = false;
+            state.publicError = true;
+        },
+        publicSeachStart(state) {
+            state.isSearching = true
+        },
+        publicSeachEnd(state) {
+            state.isSearching = false
         }
     }
 })
 
-export const { publicActionStart, publicActionSuccess, publicActionFailure } = publicActionSlice.actions;
+export const { publicActionStart, publicActionSuccess, publicActionFailure,
+    publicSeachStart, publicSeachEnd } = publicActionSlice.actions;
 export default publicActionSlice.reducer;

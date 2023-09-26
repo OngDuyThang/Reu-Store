@@ -14,6 +14,7 @@ import Delay from 'src/components/delay/Delay';
 import Popup from 'src/components/popup/Popup';
 
 export default function Cart() {
+    const isMobileDevice = window.matchMedia("(max-width: 768px)").matches
     const shipping = 5, discount = 3
     window.scrollTo(0, 0)
     const navigate = useNavigate();
@@ -28,8 +29,7 @@ export default function Cart() {
     }
 
     const { isSession } = useSelector(state => state.user)
-    const { isFetching, error } = useSelector(state => state.order)
-    const { showPopup } = useSelector(state => state.popup)
+    const { isFetching } = useSelector(state => state.order)
     async function onToken(resToken) {
         await checkout(dispatch, { tokenId: resToken.id, amount: total })
     }
@@ -38,6 +38,7 @@ export default function Cart() {
         if (!isSession) {
             e.preventDefault()
             alert('You must sign in before checkout!')
+            navigation(isMobileDevice ? 'mobile/login' : 'login')
         }
     }
 
@@ -121,10 +122,7 @@ export default function Cart() {
             </div>
             <Newsletter />
             <Footer />
-            <Popup isShow={showPopup === 1 ? true : false}
-                isSuccess={error === false ? true : false}
-                successMess='Your order has been recorded!'
-                failMess='Something went wrong! Please order again' />
+            <Popup />
         </div>
     )
 }

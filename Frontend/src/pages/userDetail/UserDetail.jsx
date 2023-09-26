@@ -10,8 +10,7 @@ import { closePopup } from 'src/redux/popupRedux'
 import Delay from 'src/components/delay/Delay'
 
 export default function UserDetail() {
-    const { isFetching, error } = useSelector(state => state.user)
-    const { showPopup } = useSelector(state => state.popup)
+    const { isFetching } = useSelector(state => state.user)
     const { currentUser } = useSelector(state => state.user)
     const dispatch = useDispatch()
 
@@ -29,10 +28,7 @@ export default function UserDetail() {
             <Edit currentUser={currentUser} />
             <Newsletter />
             <Footer />
-            <Popup isShow={showPopup === 1 ? true : false}
-                isSuccess={error === false ? true : false}
-                successMess='Edit profile successfully!'
-                failMess='Something went wrong!' />
+            <Popup />
         </div>
     )
 }

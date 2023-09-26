@@ -86,11 +86,6 @@ export default function Edit(props) {
                     <div className="content">
                         <div className="left">
                             <div className="form">
-                                <span>Password</span>
-                                <input type="password" id="password" autocomplete="off"
-                                    onChange={(event) => onChangeInput(event, 'password')} />
-                            </div>
-                            <div className="form">
                                 <span>First name</span>
                                 <input type="text"
                                     onChange={(event) => onChangeInput(event, 'firstName')} />
@@ -114,6 +109,11 @@ export default function Edit(props) {
                                 <span>Address</span>
                                 <input type="text"
                                     onChange={(event) => onChangeInput(event, 'address')} />
+                            </div>
+                            <div className="form">
+                                <span>Password</span>
+                                <input type="password" id="password" autocomplete="off"
+                                    onChange={(event) => onChangeInput(event, 'password')} />
                             </div>
                         </div>
                         <div className="right">

@@ -10,7 +10,6 @@ import { closePopup } from 'src/redux/popupRedux'
 
 export default function Newsletter() {
     const dispatch = useDispatch()
-    const { isFetching } = useSelector(state => state.publicAction)
     window.onbeforeunload = () => { dispatch(closePopup()) }
     const emailAddress = useRef('')
 
@@ -24,7 +23,6 @@ export default function Newsletter() {
 
     return (
         <div className="newsletterContainer">
-            <Delay showDelay={isFetching} />
             <h1>Newsletter</h1>
             <span>Get timely updates from your favorite products</span>
             <div className="email">

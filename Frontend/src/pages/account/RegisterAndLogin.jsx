@@ -6,14 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import Popup from 'src/components/popup/Popup'
-import { closePopup, displayPopup } from 'src/redux/popupRedux'
+import { closePopup } from 'src/redux/popupRedux'
 import Delay from 'src/components/delay/Delay'
 
 export default function RegisterAndLogin(props) {
     const formData = new FormData();
     const dispatch = useDispatch()
-    const { isFetching, error } = useSelector(state => state.user)
-    const { showPopup } = useSelector(state => state.popup)
+    const { isFetching } = useSelector(state => state.user)
     const [exchange, setExchange] = useState(props.exchange);
     const [done, setDone] = useState(props.exchange);
     const [data, setData] = useState({
@@ -26,7 +25,7 @@ export default function RegisterAndLogin(props) {
         email: '',
         password: '',
     });
-    const [message, setMessage] = useState({ successMess: '', failMess: '' })
+
 
     function slide() {
         setExchange(!exchange);
@@ -46,11 +45,9 @@ export default function RegisterAndLogin(props) {
     async function submit(type) {
         switch (type) {
             case 'login':
-                setMessage({ successMess: 'Login successfully!', failMess: 'Invalid user name or password!' })
                 await login(dispatch, { userName: data.userName, password: data.password })
                 break;
             case 'register':
-                setMessage({ successMess: 'Register account successfully!', failMess: 'Something went wrong!' })
                 for (let item in data) {
                     formData.set(item, data[item])
                 }
@@ -111,10 +108,7 @@ export default function RegisterAndLogin(props) {
                         onClick={() => slide()}>{done ? 'Login' : 'Sign up'}</div>
                 </div>
             </div>
-            <Popup isShow={showPopup === 1 ? true : false}
-                isSuccess={error === false ? true : false}
-                successMess={message.successMess}
-                failMess={message.failMess} />
+            <Popup />
         </div>
     )
 }

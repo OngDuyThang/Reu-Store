@@ -13,8 +13,7 @@ export default function MobileRegister() {
     window.onbeforeunload = () => { dispatch(closePopup()) }
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { isFetching, error } = useSelector(state => state.user)
-    const { showPopup } = useSelector(state => state.popup)
+    const { isFetching } = useSelector(state => state.user)
     const inputData = useRef({
         userName: '',
         firstName: '',
@@ -85,10 +84,7 @@ export default function MobileRegister() {
                 </div>
                 <div className='button' onClick={handleRegister}>Sign up</div>
             </div>
-            <Popup isShow={showPopup === 1 ? true : false}
-                isSuccess={error === false ? true : false}
-                successMess='Register account successfully!'
-                failMess='Something went wrong!' />
+            <Popup />
         </div>
     )
 }

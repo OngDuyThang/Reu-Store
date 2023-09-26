@@ -11,8 +11,7 @@ export default function MobileLogin() {
     window.onbeforeunload = () => { dispatch(closePopup()) }
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { isFetching, error } = useSelector(state => state.user)
-    const { showPopup } = useSelector(state => state.popup)
+    const { isFetching } = useSelector(state => state.user)
     const inputData = useRef({
         userName: '',
         password: '',
@@ -50,10 +49,7 @@ export default function MobileLogin() {
                 </div>
                 <div className='button' onClick={handleLogin}>Login</div>
             </div>
-            <Popup isShow={showPopup === 1 ? true : false}
-                isSuccess={error === false ? true : false}
-                successMess='Login successfully!'
-                failMess='Invalid user name or password!' />
+            <Popup />
         </div>
     )
 }

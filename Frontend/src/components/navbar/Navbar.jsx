@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Navbar.scss';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faMagnifyingGlass, faTree, faCartShopping,
-    faUser, faGear, faQuestion, faMoon, faSignOut, faCaretRight
+    faUser, faSignOut, faCaretRight
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,8 +12,8 @@ import { productArray2 } from 'src/data';
 import { publicRequest } from 'src/requestMethod';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import placeholderImg from "src/assets/img/placeholder.png"
-import Delay from '../delay/Delay';
 import { searchProduct } from 'src/redux/apiCalls'
+import useDebounce from 'src/hooks/useDebounce';
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -23,24 +23,26 @@ export default function Navbar() {
     }
     const cart = useSelector(state => state.cart)
     const { currentUser } = useSelector(state => state.user)
-    const { isFetching } = useSelector(state => state.publicAction)
+    const { isSearching } = useSelector(state => state.publicAction)
     const [isDrop, setIsDrop] = useState(false)
-    const search = useRef('')
+
+    const [search, setSearch] = useState('')
+    const debounceSearch = useDebounce(search)
     const [searchedProducts, setSearchedProducts] = useState([])
+
     const isMobileDevice = window.matchMedia("(max-width: 768px)").matches
 
-    function onChangeSearch(event) {
-        search.current = event.target.value
-        if (!search.current) document.querySelector('.searchResult').style.display = 'none'
-    }
+    useEffect(() => {
+        async function startSearch() {
+            const result = await searchProduct(dispatch, debounceSearch)
+            setSearchedProducts(result)
 
-    async function handleSearch() {
-        if (!search.current) return
-        const searchedArray = await searchProduct(dispatch, search)
-        if (JSON.parse(JSON.stringify(searchedArray)) !== JSON.parse(JSON.stringify(searchedProducts)))
-            setSearchedProducts(searchedArray)
-        document.querySelector('.searchResult').style.display = 'flex'
-    }
+            return () => {
+                setSearch('')
+            }
+        }
+        startSearch()
+    }, [debounceSearch])
 
     function handleLogout() {
         navigation('home')
@@ -105,12 +107,11 @@ export default function Navbar() {
             </div>
             <div className='right containerChild'>
                 <div className='searchBar'>
-                    <input type='text'
-                        onChange={(event) => onChangeSearch(event)} />
-                    <FontAwesomeIcon icon={faMagnifyingGlass} className='icon'
-                        onClick={() => handleSearch()} />
+                    <input type='text' autocomplete="asdasdasdas"
+                        onChange={(event) => setSearch(event.target.value)} />
+                    <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
                     <div className='searchResult'
-                        style={{ display: search.current ? 'flex' : 'none' }}>
+                        style={{ display: debounceSearch ? 'flex' : 'none' }}>
                         {/* {productArray2 && productArray2.length > 0 && productArray2.map(item => {
                             if (item.title.toLowerCase().includes(search)) {
                                 return (
@@ -130,7 +131,7 @@ export default function Navbar() {
                         })} */}
                         <div className="row" style={{
                             width: '100%', height: '100px',
-                            display: isFetching ? 'block' : 'none', overflowY: 'hidden'
+                            display: isSearching ? 'block' : 'none', overflowY: 'hidden'
                         }}>
                             <h1>Loading...</h1>
                         </div>

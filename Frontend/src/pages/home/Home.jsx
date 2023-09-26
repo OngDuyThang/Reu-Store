@@ -11,10 +11,10 @@ import Popup from 'src/components/popup/Popup'
 import { useSelector, useDispatch } from 'react-redux'
 import Loading from 'src/components/loading/Loading'
 import { closePopup } from 'src/redux/popupRedux'
+import Delay from 'src/components/delay/Delay'
 
 export default function Home() {
-    const { error } = useSelector(state => state.user)
-    const { showPopup } = useSelector(state => state.popup)
+    const { isPublicFetching } = useSelector(state => state.publicAction)
     const dispatch = useDispatch()
     const ProductList = lazy(() => import('src/components/productList/ProductList'))
 
@@ -25,7 +25,7 @@ export default function Home() {
             position: 'relative',
             overflow: 'hidden'
         }}>
-
+            <Delay showDelay={isPublicFetching} />
             <Announcement />
             <Navbar />
             <Slider />
@@ -36,10 +36,7 @@ export default function Home() {
             </Suspense>
             <Newsletter />
             <Footer />
-            <Popup isShow={showPopup === 1 ? true : false}
-                isSuccess={error === false ? true : false}
-                successMess='Login successfully!'
-                failMess='Invalid user name or password!' />
+            <Popup />
         </div>
     )
 }

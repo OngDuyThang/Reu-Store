@@ -1,18 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    showPopup: 0
+    showPopup: false,
+    typeSuccess: false,
+    message: ''
 }
 
 const popupSlice = createSlice({
     name: 'popup',
     initialState,
     reducers: {
-        closePopup(state) {
-            state.showPopup = 0;
+        displayPopup(state, action) {
+            state.typeSuccess = action.payload.typeSuccess
+            state.message = action.payload.message
+            state.showPopup = true
         },
-        displayPopup(state) {
-            state.showPopup = 1;
+        closePopup(state) {
+            state.showPopup = false
         }
     }
 })
