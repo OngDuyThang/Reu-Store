@@ -11,6 +11,7 @@ import Delay from 'src/components/delay/Delay'
 
 export default function UserDetail() {
     const { isFetching } = useSelector(state => state.user)
+    const { isPublicFetching } = useSelector(state => state.publicAction)
     const { currentUser } = useSelector(state => state.user)
     const dispatch = useDispatch()
 
@@ -22,7 +23,7 @@ export default function UserDetail() {
             position: 'relative',
             overflow: 'hidden',
         }}>
-            <Delay showDelay={isFetching} />
+            <Delay showDelay={isFetching || isPublicFetching} />
             <Announcement />
             <Navbar />
             <Edit currentUser={currentUser} />

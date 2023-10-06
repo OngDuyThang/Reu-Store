@@ -9,8 +9,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from 'react-router-dom';
 import { colorArr, sizeArr } from 'src/data';
+import Delay from 'src/components/delay/Delay';
+import { useSelector } from 'react-redux';
 
 export default function ProductPage() {
+    const { isPublicFetching } = useSelector(state => state.publicAction)
     const location = useLocation();
     const category = location.pathname.split('/')[2]
     const [filter, setFilter] = useState({
@@ -33,6 +36,7 @@ export default function ProductPage() {
 
     return (
         <div style={{ overflow: 'hidden' }}>
+            <Delay showDelay={isPublicFetching} />
             <Announcement />
             <Navbar />
             <div className="productPageContainer">

@@ -30,6 +30,7 @@ export default function Cart() {
 
     const { isSession } = useSelector(state => state.user)
     const { isFetching } = useSelector(state => state.order)
+    const { isPublicFetching } = useSelector(state => state.publicAction)
     async function onToken(resToken) {
         await checkout(dispatch, { tokenId: resToken.id, amount: total })
     }
@@ -44,7 +45,7 @@ export default function Cart() {
 
     return (
         <div style={{ overflow: 'hidden' }}>
-            <Delay showDelay={isFetching} />
+            <Delay showDelay={isFetching || isPublicFetching} />
             <Announcement />
             <Navbar />
             <div className="cartContainer">

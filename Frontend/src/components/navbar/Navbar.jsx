@@ -14,6 +14,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import placeholderImg from "src/assets/img/placeholder.png"
 import { searchProduct } from 'src/redux/apiCalls'
 import useDebounce from 'src/hooks/useDebounce';
+import Dialog from 'src/components/dialog/Dialog'
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -31,6 +32,7 @@ export default function Navbar() {
     const [searchedProducts, setSearchedProducts] = useState([])
 
     const isMobileDevice = window.matchMedia("(max-width: 768px)").matches
+    const [openDialog, setOpenDialog] = useState(false)
 
     useEffect(() => {
         async function startSearch() {
@@ -45,12 +47,22 @@ export default function Navbar() {
     }, [debounceSearch])
 
     function handleLogout() {
+        setOpenDialog(true)
+    }
+
+    function confirmLogout() {
+        setOpenDialog(false)
         navigation('home')
         dispatch(logout())
     }
 
+    function closeDialog() {
+        setOpenDialog(false)
+    }
+
     return (
-        <div className='navbarContainer'>
+        <div className='navbarContainer' >
+            <Dialog openDialog={openDialog} closeDialog={closeDialog} confirm={confirmLogout} />
             <div className='left containerChild'>
                 <div className='badge' onClick={() => navigation('cart')}>
                     <FontAwesomeIcon icon={faCartShopping} className='icon' />

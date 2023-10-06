@@ -14,8 +14,11 @@ import { useDispatch } from "react-redux";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import placeholderImg from "src/assets/img/placeholder.png"
 import Loading from 'src/components/loading/Loading'
+import { useSelector } from 'react-redux';
+import Delay from 'src/components/delay/Delay';
 
 export default function ProductDetail() {
+    const { isPublicFetching } = useSelector(state => state.publicAction)
     const Preview = lazy(() => import('src/components/preview/Preview'))
     const dispatch = useDispatch()
     const location = useLocation();
@@ -57,6 +60,7 @@ export default function ProductDetail() {
     }
     return (
         <div style={{ overflow: 'hidden' }}>
+            <Delay showDelay={isPublicFetching} />
             <Navbar />
             <Announcement />
             <div className="productDetailContainer">
