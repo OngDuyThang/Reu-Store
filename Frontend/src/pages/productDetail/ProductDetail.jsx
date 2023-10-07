@@ -16,6 +16,7 @@ import placeholderImg from "src/assets/img/placeholder.png"
 import Loading from 'src/components/loading/Loading'
 import { useSelector } from 'react-redux';
 import Delay from 'src/components/delay/Delay';
+import Popup from "src/components/popup/Popup";
 
 export default function ProductDetail() {
     const { isPublicFetching } = useSelector(state => state.publicAction)
@@ -118,6 +119,7 @@ export default function ProductDetail() {
             </div>
             <Newsletter />
             <Footer />
+            <Popup />
         </div>
     )
 }

@@ -3,6 +3,7 @@ import './ProductList.scss';
 import Product from '../product/Product'
 import { productArray } from '../../data.js'
 import { publicRequest } from '../../requestMethod.js';
+import Loading from 'src/components/loading/Loading';
 
 export default function ProductList(props) {
     const { category, filter, sort } = props;
@@ -49,6 +50,7 @@ export default function ProductList(props) {
                 <h1>Popular Items</h1>
             </div>
             <div className="content">
+                {products.length === 0 && <Loading />}
                 {products && products.length > 0 && category &&
                     products
                         .filter((item, index) => {

@@ -69,7 +69,7 @@ export const getNewsletter = async (dispatch, emailAddress) => {
         const res = await publicRequest.post('/api/mail/sendMail', { emailAddress })
         if (res.data.errCode === 0) {
             dispatch(publicActionSuccess())
-            dispatch(displayPopup({ typeSuccess: true, message: 'Register newsletter successfully!' }))
+            dispatch(displayPopup({ typeSuccess: true, message: 'We have sent you an email!' }))
         } else {
             dispatch(publicActionFailure())
             dispatch(displayPopup({ typeSuccess: false, message: 'Something went wrong!' }))

@@ -11,16 +11,17 @@ import { useLocation } from 'react-router-dom';
 import { colorArr, sizeArr } from 'src/data';
 import Delay from 'src/components/delay/Delay';
 import { useSelector } from 'react-redux';
+import Popup from "src/components/popup/Popup";
 
 export default function ProductPage() {
     const { isPublicFetching } = useSelector(state => state.publicAction)
     const location = useLocation();
     const category = location.pathname.split('/')[2]
     const [filter, setFilter] = useState({
-        color: 'Color',
-        size: 'Size',
+        color: 'White',
+        size: 'S',
     });
-    const [sort, setSort] = useState('Sort');
+    const [sort, setSort] = useState('Newest');
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -44,7 +45,7 @@ export default function ProductPage() {
                     <h1>{category[0].toUpperCase() + category.slice(1)}</h1>
                     <div className="filter">
                         <div className="left">
-                            <span className="title">Products Filter:</span>
+                            <span className="title">Color and Size:</span>
                             <div className="expand">
                                 <span className="selected">{filter.color}<FontAwesomeIcon icon={faAngleDown} className='icon' /></span>
                                 <div className="sub">
@@ -63,7 +64,7 @@ export default function ProductPage() {
                             </div>
                         </div>
                         <div className="right">
-                            <span className="title">Products Filter:</span>
+                            <span className="title">Sorted by:</span>
                             <div className="expand">
                                 <span className="selected">{sort}<FontAwesomeIcon icon={faAngleDown} className='icon' /></span>
                                 <div className="sub">
@@ -83,6 +84,7 @@ export default function ProductPage() {
                 <Newsletter />
             </div>
             <Footer />
+            <Popup />
         </div>
     )
 }
