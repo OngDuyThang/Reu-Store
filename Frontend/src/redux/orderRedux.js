@@ -6,7 +6,7 @@ const initialState = {
 }
 
 const orderSlice = createSlice({
-    name: 'user',
+    name: 'order',
     initialState,
     reducers: {
         createOrderStart(state) {

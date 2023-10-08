@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import MobileLogin from './pages/mobile/login/MobileLogin';
 import MobileRegister from './pages/mobile/register/MobileRegister';
+import Order from './pages/orderList/OrderList'
 
 export default function App() {
   const { isSession } = useSelector(state => state.user)
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/userDetail" element={<UserDetail />} />
         <Route path="/mobile/login" element={isSession ? <Navigate to="/home" /> : <MobileLogin />} />
         <Route path="/mobile/register" element={<MobileRegister />} />
+        <Route path="/order" element={<Order />} />
         {/* 👇️ only match this when no other routes match */}
         <Route
           path="*"

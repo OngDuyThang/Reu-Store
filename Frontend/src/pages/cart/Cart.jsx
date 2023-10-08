@@ -5,13 +5,13 @@ import Announcement from "src/components/announcement/Announcement";
 import Newsletter from "src/components/newsletter/Newsletter";
 import Footer from "src/components/footer/Footer";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { changeQuantity, removeProduct } from '../../redux/cartRedux';
 import StripeCheckout from 'react-stripe-checkout';
 import { checkout } from 'src/redux/apiCalls';
 import Delay from 'src/components/delay/Delay';
 import Popup from 'src/components/popup/Popup';
+import { displayPopup } from 'src/redux/popupRedux';
 
 export default function Cart() {
     const isMobileDevice = window.matchMedia("(max-width: 768px)").matches
@@ -28,18 +28,22 @@ export default function Cart() {
         dispatch(changeQuantity({ index, unit }))
     }
 
-    const { isSession } = useSelector(state => state.user)
+    const { isSession, currentUser } = useSelector(state => state.user)
     const { isFetching } = useSelector(state => state.order)
     const { isPublicFetching } = useSelector(state => state.publicAction)
     async function onToken(resToken) {
-        await checkout(dispatch, { tokenId: resToken.id, amount: total })
+        const stripeData = { tokenId: resToken.id, amount: total }
+        await checkout(dispatch, currentUser, products, stripeData)
     }
 
     function preventCheckout(e) {
         if (!isSession) {
             e.preventDefault()
-            alert('You must sign in before checkout!')
+            dispatch(displayPopup({ typeSuccess: false, message: 'You must sign in before checkout!' }))
             navigation(isMobileDevice ? 'mobile/login' : 'login')
+        } else if (total === 0) {
+            e.preventDefault()
+            dispatch(displayPopup({ typeSuccess: false, message: 'Your cart is empty!' }))
         }
     }
 
@@ -58,7 +62,22 @@ export default function Cart() {
                         <span>Shopping Bag ({cartQuantity})</span>
                         <span>Your Wishlist (0)</span>
                     </div>
-                    <div className="button"><a href='#checkout'>checkout now</a></div>
+                    {isSession && total > 0 ?
+                        <StripeCheckout
+                            name='Rêu Store'
+                            billingAddress
+                            shippingAddress
+                            description={`Your total is $${total}`}
+                            amount={total}
+                            token={onToken}
+                            stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}>
+                            <div className='button' onClick={(e) => preventCheckout(e)}>
+                                checkout now
+                            </div>
+                        </StripeCheckout> :
+                        <div className='button' onClick={(e) => preventCheckout(e)}>
+                            checkout now
+                        </div>}
                 </div>
 
                 <div className="cart">
@@ -97,27 +116,32 @@ export default function Cart() {
                         </div>
                         <div className='row'>
                             <span>Estimated Shipping</span>
-                            <span>$ {shipping}</span>
+                            <span>$ {total > 0 ? shipping : 0}</span>
                         </div>
                         <div className='row'>
                             <span>Shipping Discount</span>
-                            <span>$ {discount}</span>
+                            <span>$ {total > 0 ? discount : 0}</span>
                         </div>
                         <div className='total row'>
                             <span>Total</span>
-                            <span>$ {total + shipping - discount}</span>
+                            <span>$ {total > 0 ? total + shipping - discount : 0}</span>
                         </div>
-                        <StripeCheckout
-                            name='Rêu Store'
-                            billingAddress
-                            shippingAddress
-                            description={`Your total is $${total}`}
-                            amount={total}
-                            token={onToken}
-                            stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}
-                        >
-                            <div className='button' onClick={(e) => preventCheckout(e)}>checkout now</div>
-                        </StripeCheckout>
+                        {isSession && total > 0 ?
+                            <StripeCheckout
+                                name='Rêu Store'
+                                billingAddress
+                                shippingAddress
+                                description={`Your total is $${total}`}
+                                amount={total}
+                                token={onToken}
+                                stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}>
+                                <div className='button' onClick={(e) => preventCheckout(e)}>
+                                    checkout now
+                                </div>
+                            </StripeCheckout> :
+                            <div className='button' onClick={(e) => preventCheckout(e)}>
+                                checkout now
+                            </div>}
                     </div>
                 </div>
             </div>

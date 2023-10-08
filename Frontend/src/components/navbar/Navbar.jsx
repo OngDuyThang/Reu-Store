@@ -3,7 +3,7 @@ import './Navbar.scss';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faMagnifyingGlass, faTree, faCartShopping,
-    faUser, faSignOut, faCaretRight
+    faUser, faSignOut, faCaretRight, faReceipt
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -95,6 +95,13 @@ export default function Navbar() {
                                     </div>
                                     <FontAwesomeIcon icon={faCaretRight} className='rightIcon' />
                                 </div>
+                                {/* <div className='row' onClick={() => navigation('order')}>
+                                    <div className='leftIcon'>
+                                        <FontAwesomeIcon icon={faReceipt} className='icon' />
+                                        <span>My Orders</span>
+                                    </div>
+                                    <FontAwesomeIcon icon={faCaretRight} className='rightIcon' />
+                                </div> */}
                                 <div className='row' onClick={() => handleLogout()}>
                                     <div className='leftIcon'>
                                         <FontAwesomeIcon icon={faSignOut} className='icon' />

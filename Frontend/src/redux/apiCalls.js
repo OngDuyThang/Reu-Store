@@ -96,13 +96,37 @@ export const searchProduct = async (dispatch, search) => {
     return []
 }
 
-export const checkout = async (dispatch, requestBody) => {
+export const checkout = async (dispatch, currentUser, products, stripeData) => {
     dispatch(createOrderStart())
     try {
-        const res = await publicRequest.post('/api/stripe/payment', requestBody)
-        if (res.data.errCode === 0) {
-            dispatch(createOrderSuccess())
-            dispatch(displayPopup({ typeSuccess: true, message: 'Your payment has been recorded!' }))
+        const stripeRes = await publicRequest.post('/api/stripe/payment', stripeData)
+        if (stripeRes.data.errCode === 0) {
+            products = products.reduce((result, item) => {
+                result.push({ productId: item._id, quantity: item.productQuantity })
+                return result
+            }, [])
+            const orderData = {
+                userId: currentUser._id,
+                products,
+                amount: stripeRes.data.message.amount,
+                address: `${stripeRes.data.message.billing_details.address.line1} - ${stripeRes.data.message.billing_details.address.city} City - ${stripeRes.data.message.billing_details.address.country}`,
+                phoneNumber: currentUser.phoneNumber
+            }
+
+            try {
+                const orderRes = await userRequest.post('/api/orders/create', orderData)
+                if (orderRes.data.errCode === 0) {
+                    dispatch(createOrderSuccess())
+                    dispatch(displayPopup({ typeSuccess: true, message: 'Your payment has been recorded!' }))
+                } else {
+                    dispatch(createOrderFailure())
+                    dispatch(displayPopup({ typeSuccess: false, message: 'Something went wrong!' }))
+                }
+            } catch (err) {
+                dispatch(createOrderFailure())
+                dispatch(displayPopup({ typeSuccess: false, message: 'Something went wrong!' }))
+            }
+
         } else {
             dispatch(createOrderFailure())
             dispatch(displayPopup({ typeSuccess: false, message: 'Something went wrong!' }))
